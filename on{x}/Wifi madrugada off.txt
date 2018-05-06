@@ -1,0 +1,37 @@
+//Desativando o Wifi em certo horario da noite
+
+var startNight = 12;
+var endNight = 23;
+
+var setWiFiRadio = function(value) {
+    var msg = {message:'network'};
+	msg.wifiState = value;
+
+	device.applications.launch('setonx', msg, null);
+};
+
+device.scheduler.setTimer({
+	name: 'wifiNightMode',
+	time: 0,
+	interval: 'hour',
+	exact: true },
+	function () {
+		var currDate = new Date();
+		var currHour = currDate.getHours();
+
+		switch(currHour)
+		{
+			case startNight:
+				setWiFiRadio('disable');
+				console.log('Turning off wifi');
+				break;
+			case endNight:
+				setWiFiRadio('enable');
+				console.log('Turning on wifi');
+				break;
+			default:
+				console.log('No wifi action');
+				break;
+		}
+	}
+);
